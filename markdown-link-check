@@ -25,6 +25,8 @@ program
     .option('-p, --progress', 'show progress bar')
     .option('-c, --config [config]', 'apply a config file (JSON), holding e.g. url specific header configuration')
     .option('-q, --quiet', 'displays errors only')
+    .option('-a, --allways-retry', 'allways retry failed links')
+    .option('-s, --alive-status-codes', 'alive HTTP status codes')
     .option('-v, --verbose', 'displays detailed error information')
     .arguments('[filenameOrUrl]')
     .action(function (filenameOrUrl) {
@@ -69,6 +71,9 @@ program
 opts.showProgressBar = (program.progress === true); // force true or undefined to be true or false.
 opts.quiet = (program.quiet === true);
 opts.verbose = (program.verbose === true);
+opts.allwaysRetry = (program.allwaysRetry === true);
+opts.aliveStatusCodes = program.aliveStatusCodes || [ 200 ];
+
 
 let markdown = ''; // collect the markdown data, then process it
 
@@ -104,6 +109,8 @@ stream
                     opts.replacementPatterns = config.replacementPatterns;
                     opts.httpHeaders = config.httpHeaders;
                     opts.ignoreDisable = config.ignoreDisable;
+                    opts.allwaysRetry = config.allwaysRetry;
+                    opts.aliveStatusCodes = config.aliveStatusCodes;                    
 
                     runMarkdownLinkCheck(markdown, opts);
                 });
